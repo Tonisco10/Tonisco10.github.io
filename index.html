@@ -342,6 +342,17 @@
       transform: scale(1.05);
     }
 
+    .sound-btn.playing {
+      background: #d32f2f;
+      animation: pulse 0.6s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
     .word-example {
       background: #f5f5f5;
       padding: 15px;
@@ -656,7 +667,11 @@
         <div class="lesson-item">
           <h3>🎵 Lesson 1: The Letter "S" Sound</h3>
           <p>The letter S makes the sound: "sssss" (like a snake)</p>
-          <button class="sound-btn" onclick="playSound('S')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
+          <button class="sound-btn" onclick="playSound('soundS')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
+          <audio id="soundS">
+            <source src="https://assets.mixkit.co/active_storage/sfx/2803/2803-preview.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
           <p style="margin-top: 15px; font-weight: bold;">Words with S:</p>
           <div class="word-example">🐍 SAT - (s-a-t)</div>
           <div class="word-example">☀️ SUN - (s-u-n)</div>
@@ -668,7 +683,11 @@
         <div class="lesson-item">
           <h3>🎵 Lesson 2: The Letter "A" Sound</h3>
           <p>The letter A makes the sound: "aaa" (like an apple)</p>
-          <button class="sound-btn" onclick="playSound('A')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
+          <button class="sound-btn" onclick="playSound('soundA')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
+          <audio id="soundA">
+            <source src="https://assets.mixkit.co/active_storage/sfx/2799/2799-preview.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
           <p style="margin-top: 15px; font-weight: bold;">Words with A:</p>
           <div class="word-example">🍎 APPLE - (a-p-p-l-e)</div>
           <div class="word-example">🐜 ANT - (a-n-t)</div>
@@ -680,7 +699,11 @@
         <div class="lesson-item">
           <h3>🎵 Lesson 3: The Letter "T" Sound</h3>
           <p>The letter T makes the sound: "ttt" (like a clock tick)</p>
-          <button class="sound-btn" onclick="playSound('T')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
+          <button class="sound-btn" onclick="playSound('soundT')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
+          <audio id="soundT">
+            <source src="https://assets.mixkit.co/active_storage/sfx/2804/2804-preview.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
           <p style="margin-top: 15px; font-weight: bold;">Words with T:</p>
           <div class="word-example">🐯 TIGER - (t-i-g-e-r)</div>
           <div class="word-example">🌳 TREE - (t-r-e-e)</div>
@@ -708,7 +731,11 @@
           <p style="margin-top: 15px; font-weight: bold;">Try blending:</p>
           <div class="word-example">S + A + T = SAT 🎉</div>
           <p style="margin-top: 15px;">Say each sound separately, then blend them together smoothly!</p>
-          <button class="sound-btn" onclick="playSound('SAT')"><i class="fas fa-volume-up"></i> Hear Blended Word</button>
+          <button class="sound-btn" onclick="playSound('soundSAT')"><i class="fas fa-volume-up"></i> Hear Blended Word</button>
+          <audio id="soundSAT">
+            <source src="https://assets.mixkit.co/active_storage/sfx/2805/2805-preview.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
         </div>
 
         <div style="text-align: center; margin-top: 40px;">
@@ -971,19 +998,24 @@
       window.scrollTo(0, 0);
     }
 
-    // Play Sound (simulated - replace with actual audio files)
-    function playSound(letter) {
-      const sounds = {
-        'S': 'sssss (like a snake)',
-        'A': 'aaa (like an apple)',
-        'T': 'ttt (like a clock)',
-        'SAT': 'ssaaattt - SAT'
-      };
-
-      alert('🔊 Sound: ' + sounds[letter]);
-      // In a real implementation, use Web Audio API or HTML5 Audio
-      // const audio = new Audio('sounds/' + letter + '.mp3');
-      // audio.play();
+    // Play Sound Function
+    function playSound(id) {
+      const audio = document.getElementById(id);
+      if (audio) {
+        audio.currentTime = 0; // Reset to beginning
+        audio.play();
+        
+        // Add visual feedback
+        const buttons = document.querySelectorAll('.sound-btn');
+        buttons.forEach(btn => btn.classList.remove('playing'));
+        
+        // Find the button that was clicked and add playing class
+        event.target.classList.add('playing');
+        
+        audio.addEventListener('ended', function() {
+          event.target.classList.remove('playing');
+        }, {once: true});
+      }
     }
 
     // Modal Functions
