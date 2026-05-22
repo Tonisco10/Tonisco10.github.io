@@ -13,6 +13,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8068355973201777" crossorigin="anonymous"></script>
   <!-- Font Awesome 6 for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Web Audio API for text-to-speech -->
   <style>
     * {
       margin: 0;
@@ -353,6 +354,83 @@
       100% { transform: scale(1); }
     }
 
+    /* Letter Sound Grid */
+    .letter-sounds {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .letter-box {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border: 2px solid #ffc107;
+      transition: 0.3s;
+    }
+
+    .letter-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .letter-box .letter {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #d32f2f;
+      margin-bottom: 8px;
+    }
+
+    .letter-box button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+
+    .letter-box button:hover {
+      background: #1b5e20;
+      transform: scale(1.05);
+    }
+
+    /* Blending Exercise */
+    .blending-exercise {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 25px 0;
+    }
+
+    .blend-display {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+      border: 3px dashed #2e7d32;
+    }
+
+    .blend-display .blend-word {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #1e4620;
+      margin: 10px 0;
+    }
+
+    .blend-display .blend-status {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 10px 0;
+    }
+
     .word-example {
       background: #f5f5f5;
       padding: 15px;
@@ -489,6 +567,9 @@
       }
       .logo {
         font-size: 1.6rem;
+      }
+      .letter-sounds {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
@@ -648,7 +729,7 @@
     <div id="lessons-section" class="lessons-container">
       <section class="container">
         <h2>Interactive Phonics Lessons</h2>
-        <p class="subhead">Start with basic sounds and build your way up! Click on each sound to hear the pronunciation.</p>
+        <p class="subhead">Click on each letter to hear its sound, then blend them together to make a word!</p>
 
         <!-- Ad Banner -->
         <div class="ad-banner">
@@ -663,52 +744,118 @@
           </script>
         </div>
 
-        <!-- Lesson 1: S Sound -->
+        <!-- Lesson 1: Learn SAT -->
         <div class="lesson-item">
-          <h3>🎵 Lesson 1: The Letter "S" Sound</h3>
-          <p>The letter S makes the sound: "sssss" (like a snake)</p>
-          <button class="sound-btn" onclick="playSound('soundS')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
-          <audio id="soundS">
-            <source src="https://assets.mixkit.co/active_storage/sfx/2803/2803-preview.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>
-          <p style="margin-top: 15px; font-weight: bold;">Words with S:</p>
-          <div class="word-example">🐍 SAT - (s-a-t)</div>
-          <div class="word-example">☀️ SUN - (s-u-n)</div>
-          <div class="word-example">🪨 SAND - (s-a-n-d)</div>
-          <p style="margin-top: 20px; color: #d32f2f; font-weight: bold;">Practice: Say these words out loud slowly!</p>
+          <h3>🎵 Lesson 1: Learn the Word "SAT"</h3>
+          <p>Let's learn each letter sound and then blend them together to make the word!</p>
+          
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">📍 Click each letter to hear its sound:</p>
+          <div class="letter-sounds">
+            <div class="letter-box">
+              <div class="letter">S</div>
+              <button onclick="speakLetter('S')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+            <div class="letter-box">
+              <div class="letter">A</div>
+              <button onclick="speakLetter('A')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+            <div class="letter-box">
+              <div class="letter">T</div>
+              <button onclick="speakLetter('T')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">🎮 Now let's blend them together:</p>
+          <div class="blending-exercise">
+            <div class="blend-display">
+              <div class="blend-word" id="blendWord">S - A - T</div>
+              <div class="blend-status" id="blendStatus">Ready to blend! 👇</div>
+            </div>
+            
+            <div style="text-align: center;">
+              <button class="btn-primary" onclick="blendWord('SAT', 'sat')" style="margin: 10px 5px; background: #d32f2f;"><i class="fas fa-volume-up"></i> Blend: S + A + T</button>
+              <button class="btn-primary" onclick="speakWord('sat')" style="margin: 10px 5px;"><i class="fas fa-play"></i> Say "SAT"</button>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">📚 Use SAT in a sentence:</p>
+          <div class="word-example">🪑 "The cat SAT on the mat"</div>
         </div>
 
-        <!-- Lesson 2: A Sound -->
+        <!-- Lesson 2: Learn SIT -->
         <div class="lesson-item">
-          <h3>🎵 Lesson 2: The Letter "A" Sound</h3>
-          <p>The letter A makes the sound: "aaa" (like an apple)</p>
-          <button class="sound-btn" onclick="playSound('soundA')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
-          <audio id="soundA">
-            <source src="https://assets.mixkit.co/active_storage/sfx/2799/2799-preview.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>
-          <p style="margin-top: 15px; font-weight: bold;">Words with A:</p>
-          <div class="word-example">🍎 APPLE - (a-p-p-l-e)</div>
-          <div class="word-example">🐜 ANT - (a-n-t)</div>
-          <div class="word-example">🐈 CAT - (c-a-t)</div>
-          <p style="margin-top: 20px; color: #d32f2f; font-weight: bold;">Practice: Say these words out loud slowly!</p>
+          <h3>🎵 Lesson 2: Learn the Word "SIT"</h3>
+          <p>Now let's learn S, I, and T to make a new word!</p>
+          
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">📍 Click each letter to hear its sound:</p>
+          <div class="letter-sounds">
+            <div class="letter-box">
+              <div class="letter">S</div>
+              <button onclick="speakLetter('S')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+            <div class="letter-box">
+              <div class="letter">I</div>
+              <button onclick="speakLetter('I')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+            <div class="letter-box">
+              <div class="letter">T</div>
+              <button onclick="speakLetter('T')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">🎮 Now let's blend them together:</p>
+          <div class="blending-exercise">
+            <div class="blend-display">
+              <div class="blend-word" id="blendWord2">S - I - T</div>
+              <div class="blend-status" id="blendStatus2">Ready to blend! 👇</div>
+            </div>
+            
+            <div style="text-align: center;">
+              <button class="btn-primary" onclick="blendWord('SIT', 'sit')" style="margin: 10px 5px; background: #d32f2f;"><i class="fas fa-volume-up"></i> Blend: S + I + T</button>
+              <button class="btn-primary" onclick="speakWord('sit')" style="margin: 10px 5px;"><i class="fas fa-play"></i> Say "SIT"</button>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">📚 Use SIT in a sentence:</p>
+          <div class="word-example">🪑 "Please SIT down on the chair"</div>
         </div>
 
-        <!-- Lesson 3: T Sound -->
+        <!-- Lesson 3: Learn TAP -->
         <div class="lesson-item">
-          <h3>🎵 Lesson 3: The Letter "T" Sound</h3>
-          <p>The letter T makes the sound: "ttt" (like a clock tick)</p>
-          <button class="sound-btn" onclick="playSound('soundT')"><i class="fas fa-volume-up"></i> Hear the Sound</button>
-          <audio id="soundT">
-            <source src="https://assets.mixkit.co/active_storage/sfx/2804/2804-preview.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>
-          <p style="margin-top: 15px; font-weight: bold;">Words with T:</p>
-          <div class="word-example">🐯 TIGER - (t-i-g-e-r)</div>
-          <div class="word-example">🌳 TREE - (t-r-e-e)</div>
-          <div class="word-example">🚜 TAT - (t-a-t)</div>
-          <p style="margin-top: 20px; color: #d32f2f; font-weight: bold;">Practice: Say these words out loud slowly!</p>
+          <h3>🎵 Lesson 3: Learn the Word "TAP"</h3>
+          <p>Now let's learn T, A, and P to make another new word!</p>
+          
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">📍 Click each letter to hear its sound:</p>
+          <div class="letter-sounds">
+            <div class="letter-box">
+              <div class="letter">T</div>
+              <button onclick="speakLetter('T')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+            <div class="letter-box">
+              <div class="letter">A</div>
+              <button onclick="speakLetter('A')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+            <div class="letter-box">
+              <div class="letter">P</div>
+              <button onclick="speakLetter('P')"><i class="fas fa-volume-up"></i> Say Sound</button>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">🎮 Now let's blend them together:</p>
+          <div class="blending-exercise">
+            <div class="blend-display">
+              <div class="blend-word" id="blendWord3">T - A - P</div>
+              <div class="blend-status" id="blendStatus3">Ready to blend! 👇</div>
+            </div>
+            
+            <div style="text-align: center;">
+              <button class="btn-primary" onclick="blendWord('TAP', 'tap')" style="margin: 10px 5px; background: #d32f2f;"><i class="fas fa-volume-up"></i> Blend: T + A + P</button>
+              <button class="btn-primary" onclick="speakWord('tap')" style="margin: 10px 5px;"><i class="fas fa-play"></i> Say "TAP"</button>
+            </div>
+          </div>
+
+          <p style="margin-top: 20px; font-weight: bold; color: #1e4620;">📚 Use TAP in a sentence:</p>
+          <div class="word-example">👋 "TAP your finger on the table"</div>
         </div>
 
         <!-- Ad Banner -->
@@ -722,20 +869,6 @@
           <script>
                (adsbygoogle = window.adsbygoogle || []).push({});
           </script>
-        </div>
-
-        <!-- Blending Exercise -->
-        <div class="lesson-item">
-          <h3>🎮 Blending Exercise: Combine Sounds</h3>
-          <p>Now let's blend the sounds together!</p>
-          <p style="margin-top: 15px; font-weight: bold;">Try blending:</p>
-          <div class="word-example">S + A + T = SAT 🎉</div>
-          <p style="margin-top: 15px;">Say each sound separately, then blend them together smoothly!</p>
-          <button class="sound-btn" onclick="playSound('soundSAT')"><i class="fas fa-volume-up"></i> Hear Blended Word</button>
-          <audio id="soundSAT">
-            <source src="https://assets.mixkit.co/active_storage/sfx/2805/2805-preview.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>
         </div>
 
         <div style="text-align: center; margin-top: 40px;">
@@ -972,6 +1105,58 @@
   </footer>
 
   <script>
+    // Web Speech API for text to speech
+    function speakLetter(letter) {
+      const letterSounds = {
+        'S': 'ssssss',
+        'A': 'aaaa',
+        'T': 'ttt',
+        'I': 'iii',
+        'P': 'ppp'
+      };
+
+      const utterance = new SpeechSynthesisUtterance(letterSounds[letter]);
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
+      speechSynthesis.speak(utterance);
+    }
+
+    function speakWord(word) {
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
+      speechSynthesis.speak(utterance);
+    }
+
+    function blendWord(word, spoken) {
+      const utterance = new SpeechSynthesisUtterance(spoken);
+      utterance.rate = 0.6; // Slower for blending
+      utterance.pitch = 1;
+      
+      // Show blending animation
+      const blendId = word === 'SAT' ? 'blendWord' : word === 'SIT' ? 'blendWord2' : 'blendWord3';
+      const statusId = word === 'SAT' ? 'blendStatus' : word === 'SIT' ? 'blendStatus2' : 'blendStatus3';
+      
+      const blendElement = document.getElementById(blendId);
+      const statusElement = document.getElementById(statusId);
+      
+      blendElement.style.animation = 'pulse 0.6s infinite';
+      statusElement.textContent = '🎵 Blending...';
+      
+      speechSynthesis.speak(utterance);
+      
+      utterance.onend = function() {
+        blendElement.style.animation = 'none';
+        blendElement.textContent = word + ' ✅';
+        statusElement.textContent = 'Great! You made the word "' + word + '"! 🎉';
+        
+        setTimeout(() => {
+          blendElement.textContent = word.split('').join(' - ');
+          statusElement.textContent = 'Ready to blend again! 👇';
+        }, 2000);
+      };
+    }
+
     // Show/Hide Sections
     function showSection(sectionId) {
       // Hide all sections
@@ -996,26 +1181,6 @@
 
       // Scroll to top
       window.scrollTo(0, 0);
-    }
-
-    // Play Sound Function
-    function playSound(id) {
-      const audio = document.getElementById(id);
-      if (audio) {
-        audio.currentTime = 0; // Reset to beginning
-        audio.play();
-        
-        // Add visual feedback
-        const buttons = document.querySelectorAll('.sound-btn');
-        buttons.forEach(btn => btn.classList.remove('playing'));
-        
-        // Find the button that was clicked and add playing class
-        event.target.classList.add('playing');
-        
-        audio.addEventListener('ended', function() {
-          event.target.classList.remove('playing');
-        }, {once: true});
-      }
     }
 
     // Modal Functions
